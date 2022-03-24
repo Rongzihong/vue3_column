@@ -22,28 +22,23 @@
 
 <script>
 import { onMounted, ref } from "vue"
-
+import { useStore } from "vuex"
 export default {
-  // props: ["calculateHeight"],  
   name: "Login",
-  // setup(props) {
-  //   const loginRef = ref("null")
-  //   let clientHeight = ref("")
-
-  //   onMounted(() => {
-  //     clientHeight.value = `${document.documentElement.clientHeight}`
-  //     alert(clientHeight.value)
-  //     // alert(loginRef.value.clientHeight)
-  //     // loginRef.value.style.height =
-  //     //   clientHeight.value - props.calculateHeight() + "px"
-  //     // alert(loginRef.value)
-  //   })
-
-  //   return {
-  //     loginRef,
-  //     clientHeight,
-  //   }
-  // },
+  setup() {
+    let store = useStore()
+    const loginRef = ref(null)
+    onMounted(() => {
+      loginRef.value.style.height =
+        document.documentElement.clientHeight -
+        store.state.otherHeight -
+        80 +
+        "px"
+    })
+    return {
+      loginRef,
+    }
+  },
 }
 </script>
 

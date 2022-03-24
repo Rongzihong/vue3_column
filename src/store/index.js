@@ -1,4 +1,4 @@
-import { createStore, } from "vuex"
+import { createStore } from "vuex"
 import { fetchColumns } from "../api/index"
 
 // 测试数据
@@ -10,7 +10,7 @@ import { fetchColumns } from "../api/index"
 export default createStore({
   state: {
     columns: { currentPage: 0 },
-    // componentsHeight: 0,
+    otherHeight: 0,
   },
   actions: {
     async fetchColumns({ state, commit }, params = {}) {
@@ -19,7 +19,7 @@ export default createStore({
         let result = await fetchColumns(currentPage, pageSize)
         commit("fetchColumns", result.data)
       }
-    }
+    },
   },
   mutations: {
     fetchColumns(state, rawDate) {
@@ -30,11 +30,11 @@ export default createStore({
       //   total: count,
       //   currentPage: currentPage + 1
       // }
-
       state.columns = rawDate
-    }
-
+    },
+    fetchOtherComponentsHeight(state, rawDate) {
+      state.otherHeight = rawDate
+    },
   },
   getters: {},
 })
-

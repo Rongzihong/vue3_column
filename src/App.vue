@@ -1,6 +1,5 @@
 <template>
   <Header ref="headerRef" />
-  <!-- <router-view :calculateHeight="calculate()"></router-view> -->
   <router-view></router-view>
   <Footer ref="footerRef" />
 </template>
@@ -19,18 +18,15 @@ export default {
     Footer,
   },
   setup() {
-    const store = useStore()
+    let store = useStore()
+
     const headerRef = ref("null")
     const footerRef = ref("null")
-
-    // const calculate = () => {
-    //   return headerRef.value.$el.clientHeight + footerRef.value.$el.clientHeight
-    // }
     onMounted(() => {
-      // const componentsHeight =
-      //   headerRef.value.$el.clientHeight + footerRef.value.$el.clientHeight
+      const otherHeight =
+        headerRef.value.$el.clientHeight + footerRef.value.$el.clientHeight
 
-      store.dispatch("componentsHeight"  )
+      store.commit("fetchOtherComponentsHeight", otherHeight)
     })
 
     return { headerRef, footerRef }

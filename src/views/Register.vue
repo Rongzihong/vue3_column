@@ -1,5 +1,5 @@
 <template>
-  <div class="register">
+  <div class="register" ref="registerRef">
     <form class="row g-3 needs-validation" novalidate>
       <h4>注册账户</h4>
       <div class="col-md-12">
@@ -55,12 +55,22 @@
 </template>
 
 <script>
-import { onMounted } from "vue"
+import { onMounted, ref } from "vue"
+import { useStore } from "vuex"
 // import {} from "bootstrap/js/dist/"
 
 export default {
   name: "Register",
   setup() {
+    const registerRef = ref(null)
+    const store = useStore()
+    onMounted(() => {
+      registerRef.value.style.height =
+        document.documentElement.clientHeight -
+        store.state.otherHeight -
+        80 +
+        "px"
+    })
     onMounted(() => {
       ;(function () {
         "use strict"
@@ -83,6 +93,9 @@ export default {
         })
       })()
     })
+    return {
+      registerRef,
+    }
   },
 }
 </script>

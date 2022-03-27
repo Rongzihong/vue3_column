@@ -71,6 +71,13 @@ export default {
         80 +
         "px"
     })
+    window.addEventListener("resize", () => {
+      registerRef.value.style.height =
+        document.documentElement.clientHeight -
+        store.state.otherHeight -
+        80 +
+        "px"
+    })
     onMounted(() => {
       ;(function () {
         "use strict"
@@ -104,6 +111,7 @@ export default {
 .register {
   margin: 3rem auto;
   /* border: 1px solid saddlebrown; */
+  min-height: 33rem;
   width: 20rem;
 }
 h4 {

@@ -13,7 +13,7 @@
   </div>
   <div class="container">
     <div class="row">
-      <div class="mb-4 col-4" v-for="item in list" :key="item.key">
+      <div class="mb-4 col-4" v-for="item in list" :key="item._id">
         <div class="card h-100 shadow-sm">
           <div class="card-body text-center">
             <img
@@ -24,9 +24,11 @@
             <h5 class="card-title">{{ item.title }}</h5>
             <p class="card-text text-left">{{ item.description }}</p>
           </div>
-          <button class="btn btn-outline-primary mx-auto mb-3" type="button">
-            进入专栏
-          </button>
+          <router-link
+            :to="`/detail/${item._id}`"
+            class="btn btn-outline-primary mx-auto mb-3"
+            >进入专栏</router-link
+          >
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHistory } from "vue-router"
 const routes = [
   {
     path: "/",
@@ -9,8 +9,8 @@ const routes = [
     component: () => import("../views/Edit.vue"),
   },
   {
-    path: "/column",
-    component: () => import("../views/Column.vue"),
+    path: "/detail/:id",
+    component: () => import("../views/Detail.vue"),
   },
   {
     path: "/create",
@@ -32,6 +32,4 @@ const routes = [
 export const router = createRouter({
   routes,
   history: createWebHistory(),
-
 })
-

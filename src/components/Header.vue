@@ -22,10 +22,10 @@
   </nav>
 </template>
 
-<script >
+<script>
 import { router } from "../router"
 
-export default ({
+export default {
   name: "Header",
   setup() {
     const backHome = () => {
@@ -43,7 +43,7 @@ export default ({
       toLoginPage,
     }
   },
-})
+}
 </script>
 
 <style scoped>
@@ -68,6 +68,7 @@ h3 {
   font-size: 1.5rem;
   letter-spacing: 0.005px;
 }
+
 div > button {
   margin-left: 1rem;
 }

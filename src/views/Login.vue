@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { onMounted, ref } from "vue"
+import { onMounted, ref, nextTick } from "vue"
 import { useStore } from "vuex"
 export default {
   name: "Login",
@@ -29,6 +29,13 @@ export default {
     let store = useStore()
     const loginRef = ref(null)
     onMounted(() => {
+      loginRef.value.style.height =
+        document.documentElement.clientHeight -
+        store.state.otherHeight -
+        80 +
+        "px"
+    })
+    window.addEventListener("resize", () => {
       loginRef.value.style.height =
         document.documentElement.clientHeight -
         store.state.otherHeight -
@@ -46,6 +53,7 @@ export default {
 .login {
   margin: 3rem auto;
   /* border: 1px solid saddlebrown; */
+  min-height: 20rem;
   width: 20rem;
   /* background-color: honeydew; */
 }

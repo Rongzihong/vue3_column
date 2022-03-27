@@ -1,8 +1,13 @@
-import http from "./http";
+import http from "./http"
 
 export const fetchColumns = (currentPage, pageSize) =>
   http({
     url: `/columns?currentPage=${currentPage}&pageSize=${pageSize}`,
-    method: "get",
+    method: "GET",
   })
 
+export const fetchColumnDetail = (id) =>
+  http({
+    url: `/columns/${id}`,
+    method: "GET",
+  })

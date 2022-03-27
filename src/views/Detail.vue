@@ -2,7 +2,7 @@
   <div class="column">
     <div class="intro">
       <img src="../assets/滑稽.jpeg" alt="" />
-      <h4>Vehicle攻城狮</h4>
+      <h4>gdf</h4>
       <p>半吊子系统和程序狗，沉迷高端理论，日渐消瘦。</p>
     </div>
     <!-- <hr /> -->
@@ -56,8 +56,25 @@
 </template>
 
 <script>
+import { onMounted, computed } from "vue"
+import { useStore } from "vuex"
+import { useRoute } from "vue-router"
 export default {
-  name: "Column",
+  name: "Detail",
+  setup() {
+    const store = useStore()
+    const router = useRoute()
+    const columnDetailObjecct = computed(
+      () => store.state.columnDetailObjecct || 0
+    )
+    onMounted(() => {
+      // console.log(typeof router.params.id)
+      store.dispatch("fetchColumnDetail", router.params.id)
+    })
+    return {
+      columnDetailObjecct,
+    }
+  },
 }
 </script>
 

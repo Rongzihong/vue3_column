@@ -1,9 +1,9 @@
 <template>
   <div class="column">
     <div class="intro">
-      <img src="../assets/滑稽.jpeg" alt="" />
-      <h4>gdf</h4>
-      <p>半吊子系统和程序狗，沉迷高端理论，日渐消瘦。</p>
+      <img :src="column.avatar.url" :alt="column.avatar.title" />
+      <h4>{{ column.title }}</h4>
+      <p>{{ column.description }}</p>
     </div>
     <!-- <hr /> -->
     <p class="space"></p>
@@ -58,22 +58,24 @@
 <script>
 import { onMounted, computed } from "vue"
 import { useStore } from "vuex"
-import { useRoute } from "vue-router"
+import { useRoute, useRouter } from "vue-router"
 export default {
   name: "Detail",
   setup() {
     const store = useStore()
-    const router = useRoute()
-    const columnDetailObjecct = computed(
-      () => store.state.columnDetailObjecct || 0
-    )
+    const route = useRoute()
+    const router = useRouter()
+    const column = computed(() => {
+      console.log(route.params.id)
+      return store.getters.getColumnDetailById(route.params.id)
+    })
     onMounted(() => {
       // console.log(typeof router.params.id)
-      store.dispatch("fetchColumnDetail", router.params.id)
+      store.dispatch("fetchColumnDetail", route.params.id)
+      store.dispatch("fetchPosts", route.params.id,)
     })
-    return {
-      columnDetailObjecct,
-    }
+
+    return { column }
   },
 }
 </script>

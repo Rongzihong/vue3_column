@@ -45,7 +45,7 @@ export default {
   name: "Home",
   setup() {
     const store = useStore()
-    const list = computed(() => store.state.columns.list || 0)
+    const list = computed(() => store.state.columns.data || 0)
     onMounted(() => {
       store.dispatch("fetchColumns")
     })

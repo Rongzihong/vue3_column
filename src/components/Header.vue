@@ -23,11 +23,12 @@
 </template>
 
 <script>
-import { router } from "../router"
+import { useRouter } from "vue-router"
 
 export default {
   name: "Header",
   setup() {
+    const router = useRouter()
     const backHome = () => {
       router.push("/")
     }

@@ -11,6 +11,11 @@ const routes = [
   {
     path: "/detail/:id",
     component: () => import("../views/Detail.vue"),
+    // beforeEnter: (to, from) => {
+    //   // reject the navigation
+    //   console.log(to, from)
+    //   return false
+    // },
   },
   {
     path: "/create",

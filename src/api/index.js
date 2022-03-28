@@ -11,3 +11,9 @@ export const fetchColumnDetail = (id) =>
     url: `/columns/${id}`,
     method: "GET",
   })
+
+export const fetchPosts = (columnId, currentPage, pageSize) =>
+  http({
+    url: `/columns/${columnId}/posts?currentPage=${currentPage}&pageSize=${pageSize}`,
+    method: "get",
+  })

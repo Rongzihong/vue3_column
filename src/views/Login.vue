@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { onMounted, ref, nextTick } from "vue"
+import { onMounted, ref } from "vue"
 import { useStore } from "vuex"
 export default {
   name: "Login",

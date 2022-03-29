@@ -30,5 +30,6 @@ export default {
   color: #6c757d;
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
+  margin-top: 1.5rem;
 }
 </style>

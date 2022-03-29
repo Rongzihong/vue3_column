@@ -1,53 +1,19 @@
 <template>
   <div class="column">
     <div class="intro">
-      <img :src="column.avatar.url" :alt="column.avatar.title" />
+      <img :src="column.avatar.url" alt="" />
       <h4>{{ column.title }}</h4>
       <p>{{ column.description }}</p>
     </div>
     <!-- <hr /> -->
     <p class="space"></p>
-    <div class="card mb-3">
-      <div class="card-body">
-        <h5 class="card-title">Special title treatment</h5>
-        <p class="card-text">
-          With supporting text below as a natural lead-in to additional content.
-        </p>
-        <a href="#" class="btn btn-primary">Go somewhere</a>
+    <div class="content-card" v-for="item in post" :key="item.key">
+      <a href="#">{{ item.title }}</a>
+      <div class="content-card-body">
+        <img :src="item.image.url" alt="" />
+        <p>{{ item.excerpt }}</p>
       </div>
-    </div>
-    <div class="card mb-3">
-      <div class="card-body">
-        <h5 class="card-title">Special title treatment</h5>
-        <p class="card-text">
-          With supporting text below as a natural lead-in to additional content.
-        </p>
-        <a href="#" class="btn btn-primary">Go somewhere</a>
-      </div>
-    </div>
-    <div class="card mb-4">
-      <div class="row g-0">
-        <div class="col-md-4">
-          <img
-            src="../assets/狗狗.jpeg"
-            class="img-fluid rounded-start"
-            alt="..."
-          />
-        </div>
-        <div class="col-md-8">
-          <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">
-              This is a wider card with supporting text below as a natural
-              lead-in to additional content. This content is a little bit
-              longer.
-            </p>
-            <p class="card-text">
-              <small class="text-muted">Last updated 3 mins ago</small>
-            </p>
-          </div>
-        </div>
-      </div>
+      <span>{{ item.createdAt }}</span>
     </div>
     <div class="d-grid gap-2 d-xl-flex justify-content-md-center">
       <button class="btn btn-outline-primary" type="button">加载更多</button>
@@ -58,24 +24,31 @@
 <script>
 import { onMounted, computed } from "vue"
 import { useStore } from "vuex"
-import { useRoute, useRouter } from "vue-router"
+import { useRoute } from "vue-router"
 export default {
   name: "Detail",
   setup() {
     const store = useStore()
     const route = useRoute()
-    const router = useRouter()
+
     const column = computed(() => {
-      console.log(route.params.id)
       return store.getters.getColumnDetailById(route.params.id)
     })
+    const post = computed(() => {
+      return store.state.post.data
+    })
+    const params = {
+      columnId: route.params.id,
+      pageSize: 5,
+      currentPage: 1,
+    }
     onMounted(() => {
       // console.log(typeof router.params.id)
       store.dispatch("fetchColumnDetail", route.params.id)
-      store.dispatch("fetchPosts", route.params.id,)
+      store.dispatch("fetchPosts", params)
     })
 
-    return { column }
+    return { column, post }
   },
 }
 </script>
@@ -85,8 +58,56 @@ export default {
   margin: 0 1rem;
 }
 
+.content-card {
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: space-evenly;
+  border: 1px solid #dee2e6;
+  border-radius: 0.25rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* .content-card:last-child {
+  margin-bottom: 3rem !important;
+  background-color: rebeccapurple;
+} */
+
+.content-card > * {
+  margin: 0.5rem 1rem;
+}
+
+.content-card a {
+  text-decoration: none;
+  color: #1a1a1a;
+  font-size: 1.5rem;
+}
+.content-card a:hover {
+  color: #0d6efd;
+}
+
+.content-card-body {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  height: 7.5rem;
+}
+
+.content-card img {
+  width: 200px;
+  height: 100%;
+  border-radius: 0.3rem;
+  margin-right: 1rem;
+  /* float: left; */
+}
+
+.content-card span {
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
 .intro {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 .space {
   margin: 0;

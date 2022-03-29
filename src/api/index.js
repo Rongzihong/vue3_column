@@ -17,3 +17,4 @@ export const fetchPosts = (columnId, currentPage, pageSize) =>
     url: `/columns/${columnId}/posts?currentPage=${currentPage}&pageSize=${pageSize}`,
     method: "get",
   })
+ 

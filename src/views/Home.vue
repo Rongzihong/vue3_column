@@ -33,8 +33,13 @@
       </div>
     </div>
   </div>
-  <div class="d-grid gap-2 col-4 mx-auto button-style">
-    <button class="btn btn-outline-primary">加载更多</button>
+  <div
+    class="d-grid gap-2 col-4 mx-auto button-style"
+    v-if="Object.keys(list).length != total"
+  >
+    <button class="btn btn-outline-primary mt-3" @click="loadMore">
+      加载更多
+    </button>
   </div>
 </template>
 
@@ -44,13 +49,23 @@ import { useStore } from "vuex"
 export default {
   name: "Home",
   setup() {
+    const total = computed(() => store.state.columns.total)
     const store = useStore()
-    const list = computed(() => store.state.columns.data || 0)
+    const list = computed(() => store.state.columns.data)
     onMounted(() => {
       store.dispatch("fetchColumns")
     })
+    const params = {
+      currentPage: 1,
+      pageSize: 11,
+    }
+    const loadMore = () => {
+      store.dispatch("fetchColumns", params)
+    }
     return {
       list,
+      loadMore,
+      total,
     }
   },
 }

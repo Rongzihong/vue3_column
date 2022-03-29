@@ -5,17 +5,16 @@ const routes = [
     redirect: "/home",
   },
   {
+    path: "/postdetail/:id",
+    component: () => import("../views/PostDetail.vue")
+  },
+  {
     path: "/edit",
     component: () => import("../views/Edit.vue"),
   },
   {
     path: "/detail/:id",
     component: () => import("../views/Detail.vue"),
-    // beforeEnter: (to, from) => {
-    //   // reject the navigation
-    //   console.log(to, from)
-    //   return false
-    // },
   },
   {
     path: "/create",

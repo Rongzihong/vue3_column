@@ -1,14 +1,14 @@
 <template>
   <div class="column">
     <div class="intro">
-      <img :src="column.avatar.url" alt="" />
+      <img :src="column.avatar?.url" alt="" />
       <h4>{{ column.title }}</h4>
       <p>{{ column.description }}</p>
     </div>
     <!-- <hr /> -->
     <p class="space"></p>
     <div class="content-card" v-for="item in post" :key="item.key">
-      <a href="#">{{ item.title }}</a>
+      <a @click="toPost(item._id)">{{ item.title }}</a>
       <div class="content-card-body">
         <img :src="item.image.url" alt="" />
         <p>{{ item.excerpt }}</p>
@@ -24,12 +24,13 @@
 <script>
 import { onMounted, computed } from "vue"
 import { useStore } from "vuex"
-import { useRoute } from "vue-router"
+import { useRoute, useRouter } from "vue-router"
 export default {
   name: "Detail",
   setup() {
     const store = useStore()
     const route = useRoute()
+    const router = useRouter()
 
     const column = computed(() => {
       return store.getters.getColumnDetailById(route.params.id)
@@ -42,13 +43,19 @@ export default {
       pageSize: 5,
       currentPage: 1,
     }
+
+    const toPost = (id) => {
+      console.log(id)
+      router.push(`/postdetail/${id}`)
+    }
+
     onMounted(() => {
       // console.log(typeof router.params.id)
       store.dispatch("fetchColumnDetail", route.params.id)
       store.dispatch("fetchPosts", params)
     })
 
-    return { column, post }
+    return { column, post, toPost }
   },
 }
 </script>
@@ -81,6 +88,7 @@ export default {
   text-decoration: none;
   color: #1a1a1a;
   font-size: 1.5rem;
+  cursor: pointer;
 }
 .content-card a:hover {
   color: #0d6efd;

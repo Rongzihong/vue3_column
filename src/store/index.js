@@ -1,13 +1,19 @@
 import { createStore } from "vuex"
-import { fetchColumns, fetchColumnDetail, fetchPosts } from "../api/index"
+import {
+  fetchColumns,
+  fetchColumnDetail,
+  fetchPosts,
+  fetchPost,
+} from "../api/index"
 // 测试数据
 // import http from "../api/http"
-// http.get('/columns?currentPage=1&pageSize=7').then(res => {
-//   console.log(res)
-// })
+// // http.get('/columns?currentPage=1&pageSize=7').then(res => {
+// //   console.log(res)
+// // })
 // http
-// .get("/columns/5f3e86d62c56ee13bb83096b/posts?currentPage=1&pageSize=5")
-// .get("/columns?currentPage=1&pageSize=5")
+//   .get("/posts/5f3fade0c9875c2cd848a2cf/")
+//   // .get("/columns/5f3e86d62c56ee13bb83096b/posts?currentPage=1&pageSize=5")
+//   // .get("/columns?currentPage=1&pageSize=5")
 //   .then((res) => {
 //     console.log(res)
 //   })
@@ -37,14 +43,24 @@ export default createStore({
       const { columnId, currentPage = 1, pageSize = 5 } = params
       // 给结构属性赋值默认值
       let result = await fetchPosts(columnId, currentPage, pageSize)
-      console.log(result);
+      console.log(result)
       commit("fetchPosts", result)
+    },
+
+    async fetchPost({ state, commit }, id) {
+      const currentPost = state.post.data[id]
+      if (!currentPost || !currentPost.content) {
+        const result = await fetchPost(id)
+        commit("fetchPost", result)
+      } else {
+        return Promise.resolve({ data: currentPost })
+      }
     },
   },
   mutations: {
-    fetchColumns(state, rawDate) {
+    fetchColumns(state, rawdata) {
       const { data } = state.columns
-      const { list, count, currentPage } = rawDate.data
+      const { list, count, currentPage } = rawdata.data
       // console.log(list instanceof Array)
       const arrToobj = (list) => {
         return list.reduce((previousValue, currentValue) => {
@@ -66,15 +82,15 @@ export default createStore({
         currentPage: currentPage * 1,
       }
     },
-    fetchOtherComponentsHeight(state, rawDate) {
-      state.otherHeight = rawDate
+    fetchOtherComponentsHeight(state, rawdata) {
+      state.otherHeight = rawdata
     },
-    fetchColumnDetail(state, rawDate) {
-      state.columns.data[rawDate.data._id] = rawDate.data
+    fetchColumnDetail(state, rawdata) {
+      state.columns.data[rawdata.data._id] = rawdata.data
     },
-    fetchPosts(state, rawDate) {
+    fetchPosts(state, rawdata) {
       const { data } = state.post
-      const { list, pageSize, count, currentPage } = rawDate.data
+      const { list, pageSize, count, currentPage } = rawdata.data
       state.post = {
         data: { ...data, ...list },
         total: count,
@@ -82,10 +98,16 @@ export default createStore({
         currentPage,
       }
     },
+    fetchPost(state, rawdata) {
+      state.post.data[rawdata.data._id] = rawdata.data
+    },
   },
   getters: {
     getColumnDetailById: (state) => (id) => {
       return state.columns.data[id] || {}
+    },
+    getPostById: (state) => (id) => {
+      return state.post.data[id] || {}
     },
   },
 })

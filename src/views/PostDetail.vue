@@ -6,29 +6,47 @@
           <router-link to="/home">首页</router-link>
         </li>
         <li class="breadcrumb-item active">
-          <router-link to="/login">专栏首页</router-link>
+          <router-link :to="`/detail/${briefIntro}`">专栏首页</router-link>
         </li>
-        <li class="breadcrumb-item">gfdsfsd</li>
+        <li class="breadcrumb-item">{{ post.title }}</li>
       </ol>
     </nav>
-    <img src="../assets/狗狗.jpeg" alt="" />
-    <h2>看了这么多年美剧，我为什么还是没法摆脱字幕？</h2>
+    <img :src="post.image?.url" alt="" />
+    <h2>{{ post.title }}</h2>
     <p class="space"></p>
     <div class="intro">
-      <img src="../assets/滑稽.jpeg" alt="" />
-      <!-- <div class="text-intro">
-        <p>Maxime_Nienow</p>
-        <span>Implemented secondary concept</span>
-      </div> -->
-      <i>发表于：2020-08-21 19:20:00</i>
+      <div class="text-big-intro">
+        <img :src="post.author?.avatar?.url" alt="" />
+        <div class="text-intro">
+          <p>{{ post.author?.nickName }}</p>
+          <span>{{ post.author?.description }}</span>
+        </div>
+      </div>
+      <i>发表于：{{ post.createdAt }}</i>
     </div>
     <p class="space"></p>
+    <div v-html="post.content"></div>
   </div>
 </template>
 
 <script>
+import { onMounted, computed } from "vue"
+import { useRoute } from "vue-router"
+import { useStore } from "vuex"
 export default {
   name: "PostDtail",
+  setup() {
+    const route = useRoute()
+    const store = useStore()
+    const briefIntro = () => {
+      return route.params.id
+    }
+    const post = computed(() => store.getters.getPostById(route.params.id))
+    onMounted(() => {
+      store.dispatch("fetchPost", route.params.id)
+    })
+    return { post, briefIntro }
+  },
 }
 </script>
 
@@ -51,7 +69,7 @@ nav {
 }
 img {
   width: 100%;
-  height: 20rem;
+  height: 25rem;
   border-radius: 0.3rem;
   margin-bottom: 2rem;
 }
@@ -64,22 +82,44 @@ h2 {
 .space {
   margin: 0;
   border-bottom: 1px solid #dee2e6;
-  margin-bottom: 1rem;
+  margin-bottom: 3rem;
 }
 .intro {
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.post-detail > p:first-of-type {
+  margin-bottom: 0;
+}
+
+.text-big-intro {
+  display: flex;
+  flex-direction: row;
   align-items: center;
 }
 
 .intro img {
+  margin-top: 2rem;
   border-radius: 50%;
+  margin-right: 0.5rem;
   height: 50px;
   width: 50px;
 }
-/* .text-intro {
+.text-intro {
   display: flex;
   flex-direction: column;
-} */
+  /* justify-content: flex-start; */
+  /* align-items: center; */
+}
+p {
+  margin-bottom: 0;
+}
+
+span,
+i {
+  color: #6c757d;
+}
 </style>

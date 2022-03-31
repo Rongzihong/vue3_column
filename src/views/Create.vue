@@ -1,7 +1,7 @@
 <template>
   <div class="create">
     <h4>新建文章</h4>
-    <div class="upload">
+    <div class="upload" type="file">
       <h3>点击上传头图</h3>
     </div>
     <div class="form-floating mb-4">
@@ -26,11 +26,10 @@
   </div>
 </template>
 
-<script >
-
-export default ({
+<script>
+export default {
   name: "Create",
-})
+}
 </script>
 
 <style scoped>

@@ -68,6 +68,7 @@ export default {
     }
 
     onMounted(() => {
+      console.log(toRaw(column.value))
       store.dispatch("fetchColumnDetail", route.params.id)
       store.dispatch("fetchPosts", params)
     })

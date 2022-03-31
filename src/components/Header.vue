@@ -1,22 +1,16 @@
 <template>
   <nav class="navbar">
     <div class="wapper">
-      <h3 @click="backHome">之乎者也</h3>
+      <router-link to="/" class="logo">之乎者也</router-link>
       <div v-if="!logined">
-        <button
-          type="button"
-          @click="toLoginPage"
-          class="btn btn-outline-light btn-sm"
+        <router-link to="/login" class="btn btn-outline-light btn-sm"
+          >登录</router-link
         >
-          登录
-        </button>
-        <button
-          type="button"
-          @click="toRegisterPage"
-          class="btn register btn-outline-light btn-sm"
+        <router-link
+          to="/register"
+          class="btn ml-1 register btn-outline-light btn-sm"
+          >注册</router-link
         >
-          注册
-        </button>
       </div>
       <div v-else class="dropdown">
         <button
@@ -27,10 +21,12 @@
           你好,{{ userInfo.nickName }}
         </button>
         <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="#">新建文章</a></li>
-          <li><a class="dropdown-item" href="#">我的专栏</a></li>
-          <li><a class="dropdown-item" href="#">编辑资料</a></li>
-          <li><a class="dropdown-item" href="#">退出登录</a></li>
+          <li><a class="dropdown-item" href="/create">新建文章</a></li>
+          <li>
+            <a class="dropdown-item" :href="`/detail/${column}`">我的专栏</a>
+          </li>
+          <li><a class="dropdown-item" href="/edit">编辑资料</a></li>
+          <li><a class="dropdown-item" @click="logout">退出登录</a></li>
         </ul>
       </div>
     </div>
@@ -40,34 +36,30 @@
 <script>
 import "bootstrap/js/dist/dropdown"
 import { computed } from "vue"
-import { useRouter } from "vue-router"
 import { useStore } from "vuex"
 export default {
   name: "Header",
   setup() {
-    const router = useRouter()
     const store = useStore()
-    const backHome = () => {
-      router.push("/")
-    }
     const logined = computed(() => {
       return store.state.userInformation.isLogin
     })
     const userInfo = computed(() => {
       return store.state.userInformation.data
     })
-    const toRegisterPage = () => {
-      router.push("/register")
+    const column = computed(() => {
+      return store.state.userInformation.column
+    })
+
+    const logout = () => {
+      store.commit("logout")
     }
-    const toLoginPage = () => {
-      router.push("/login")
-    }
+
     return {
-      backHome,
-      toRegisterPage,
-      toLoginPage,
       logined,
       userInfo,
+      logout,
+      column,
     }
   },
 }
@@ -89,16 +81,17 @@ export default {
   align-items: center;
 }
 
-h3 {
-  padding-top: 0.5rem;
+.logo {
   cursor: pointer;
-  font-weight: 300;
+  font-weight: 350;
   /* margin-left: 8rem; */
   font-size: 1.5rem;
   letter-spacing: 0.005px;
+  text-decoration: none;
+  color: #1a1a1a;
 }
 
-div > button {
+.ml-1 {
   margin-left: 1rem;
 }
 /* div :nth-child(2) {

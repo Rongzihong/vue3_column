@@ -60,7 +60,7 @@
         <button
           type="submit"
           class="btn btn-primary"
-          @click.prevent="toRegister"
+          @click.prevent="register"
         >
           注册新用户
         </button>
@@ -87,19 +87,16 @@ export default {
       password: "",
       verifyPsd: "",
     })
-    const toRegister = () => {
+    const register = () => {
       const { email, nickName, password } = registerInfo
       // console.log({ email, nickName, password })
       store
         .dispatch("register", { email, nickName, password })
         .then((res) => {
-          alert("注册成功!!!已自动登录~2秒后跳转到首页")
-          setTimeout(() => {
-            router.push("/home")
-          }, 2000)
+          console.log(res)
         })
         .catch((err) => {
-          console.log("唔知点该,注册失败哦")
+          console.log("唔知点该,注册失败哦", err)
         })
     }
     onMounted(() => {
@@ -119,7 +116,7 @@ export default {
     return {
       registerRef,
       registerInfo,
-      toRegister,
+      register,
     }
   },
 }

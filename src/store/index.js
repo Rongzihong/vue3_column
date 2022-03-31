@@ -5,6 +5,7 @@ import {
   fetchColumnDetail,
   fetchPosts,
   fetchPost,
+  deletePost,
   userLogin,
   fetchCurrentUserInformation,
   register
@@ -49,7 +50,6 @@ export default createStore({
       const { columnId, currentPage = 1, pageSize = 3 } = params
       // 给结构属性赋值默认值
       let result = await fetchPosts(columnId, currentPage, pageSize)
-      console.log(result)
       commit("fetchPosts", result)
     },
     async fetchPost({ state, commit }, id) {
@@ -61,6 +61,9 @@ export default createStore({
         return Promise.resolve({ data: currentPost })
       }
     },
+    // async deletePost({ state, commit }, id) {
+    //   commit("deletePost", await deletePost(id))
+    // },
     async userLogin({ state, commit }, params) {
       let result = await userLogin(params)
       commit("userLogin", result)
@@ -79,6 +82,7 @@ export default createStore({
     async register({ commit }, params) {
       let result = await register(params)
       commit("register", result)
+      console.log(result);
     }
   },
   mutations: {
@@ -139,6 +143,12 @@ export default createStore({
 
     },
     register(state, rawData) {
+    },
+    userLogout(state) {
+      state.token = ""
+      state.userInformation = { isLogin: false }
+      localStorage.removeItem("token")
+      delete http.defaults.headers.common.Authorization
     }
   },
   getters: {

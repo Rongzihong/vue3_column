@@ -5,7 +5,9 @@
       <div class="col-6 center">
         <img src="../assets/专栏.svg" alt="" />
         <h2>随心写作，自由表达</h2>
-        <button type="buttton" class="btn btn-primary">开始写文章</button>
+        <router-link to="/create" class="btn btn-primary"
+          >开始写文章</router-link
+        >
       </div>
       <div class="col"></div>
     </div>

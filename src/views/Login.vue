@@ -24,7 +24,7 @@
       <router-link to="/register">还没有账户？去注册一个新的吧！</router-link>
 
       <div class="d-grid col-12 mx-auto">
-        <button type="submit" class="btn btn-primary" @click.prevent="toLogin">
+        <button type="submit" class="btn btn-primary" @click.prevent="login">
           登录
         </button>
       </div>
@@ -44,17 +44,17 @@ export default {
     const loginRef = ref(null)
     const password = ref("")
     const email = ref("")
-    const toLogin = () => {
+    const login = () => {
       store
         .dispatch("loginAndfetch", {
           email: email.value,
           password: password.value,
         })
         .then(() => {
-          alert("登录成功!2秒后跳转到首页~")
-          setTimeout(() => {
-            router.push("/home")
-          }, 2000)
+          router.push("/home")
+        })
+        .catch((err) => {
+          console.log(err)
         })
     }
     onMounted(() => {
@@ -75,7 +75,7 @@ export default {
       loginRef,
       email,
       password,
-      toLogin,
+      login,
     }
   },
 }

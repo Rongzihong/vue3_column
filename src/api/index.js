@@ -24,6 +24,11 @@ export const fetchPost = (id) =>
     method: "get",
   })
 
+export const deletePost = (id) => http({
+  url: `/posts/${id}`,
+  method: "delete",
+})
+
 export const userLogin = (data) =>
   http({
     url: "/user/login",

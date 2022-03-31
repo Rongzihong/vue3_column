@@ -23,3 +23,24 @@ export const fetchPost = (id) =>
     url: `/posts/${id}`,
     method: "get",
   })
+
+export const userLogin = (data) =>
+  http({
+    url: "/user/login",
+    data,
+    method: "post"
+  })
+
+
+export const fetchCurrentUserInformation = () =>
+  http({
+    url: "/user/current",
+    method: "get"
+  })
+
+export const register = (data) =>
+  http({
+    url: "/users",
+    data,
+    method: "post"
+  })

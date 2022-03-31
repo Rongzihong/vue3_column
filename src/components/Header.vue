@@ -2,7 +2,7 @@
   <nav class="navbar">
     <div class="wapper">
       <h3 @click="backHome">之乎者也</h3>
-      <div>
+      <div v-if="!logined">
         <button
           type="button"
           @click="toLoginPage"
@@ -18,20 +18,44 @@
           注册
         </button>
       </div>
+      <div v-else class="dropdown">
+        <button
+          class="btn btn-outline-light dropdown-toggle"
+          type="button"
+          data-bs-toggle="dropdown"
+        >
+          你好,{{ userInfo.nickName }}
+        </button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="#">新建文章</a></li>
+          <li><a class="dropdown-item" href="#">我的专栏</a></li>
+          <li><a class="dropdown-item" href="#">编辑资料</a></li>
+          <li><a class="dropdown-item" href="#">退出登录</a></li>
+        </ul>
+      </div>
     </div>
   </nav>
 </template>
 
 <script>
+import "bootstrap/js/dist/dropdown"
+import { computed } from "vue"
 import { useRouter } from "vue-router"
-
+import { useStore } from "vuex"
 export default {
   name: "Header",
   setup() {
     const router = useRouter()
+    const store = useStore()
     const backHome = () => {
       router.push("/")
     }
+    const logined = computed(() => {
+      return store.state.userInformation.isLogin
+    })
+    const userInfo = computed(() => {
+      return store.state.userInformation.data
+    })
     const toRegisterPage = () => {
       router.push("/register")
     }
@@ -42,6 +66,8 @@ export default {
       backHome,
       toRegisterPage,
       toLoginPage,
+      logined,
+      userInfo,
     }
   },
 }
@@ -60,9 +86,11 @@ export default {
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
 h3 {
+  padding-top: 0.5rem;
   cursor: pointer;
   font-weight: 300;
   /* margin-left: 8rem; */

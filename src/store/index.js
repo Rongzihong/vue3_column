@@ -1,9 +1,13 @@
 import { createStore } from "vuex"
+import http from "../api/http"
 import {
   fetchColumns,
   fetchColumnDetail,
   fetchPosts,
   fetchPost,
+  userLogin,
+  fetchCurrentUserInformation,
+  register
 } from "../api/index"
 // 测试数据
 // import http from "../api/http"
@@ -23,6 +27,8 @@ export default createStore({
     columns: { currentPage: 0, total: 0, data: {} },
     otherHeight: 0,
     post: { data: {}, total: 0, currentPage: 0, pageSize: 0 },
+    userInformation: { data: {}, isLogin: false },
+    token: localStorage.getItem("token") || ""
   },
   actions: {
     async fetchColumns({ state, commit }, params = {}) {
@@ -40,13 +46,12 @@ export default createStore({
       }
     },
     async fetchPosts({ state, commit }, params = {}) {
-      const { columnId, currentPage = 1, pageSize = 5 } = params
+      const { columnId, currentPage = 1, pageSize = 3 } = params
       // 给结构属性赋值默认值
       let result = await fetchPosts(columnId, currentPage, pageSize)
       console.log(result)
       commit("fetchPosts", result)
     },
-
     async fetchPost({ state, commit }, id) {
       const currentPost = state.post.data[id]
       if (!currentPost || !currentPost.content) {
@@ -56,11 +61,30 @@ export default createStore({
         return Promise.resolve({ data: currentPost })
       }
     },
+    async userLogin({ state, commit }, params) {
+      let result = await userLogin(params)
+      commit("userLogin", result)
+    },
+    async fetchCurrentUserInformation({ state, commit }) {
+      let result = await fetchCurrentUserInformation()
+      console.log(result);
+      commit("fetchCurrentUserInformation", result)
+    },
+    async loginAndfetch({ dispatch }, loginData) {
+      return dispatch("userLogin", loginData).then(() => {
+        return dispatch("fetchCurrentUserInformation")
+      })
+
+    },
+    async register({ commit }, params) {
+      let result = await register(params)
+      commit("register", result)
+    }
   },
   mutations: {
-    fetchColumns(state, rawdata) {
+    fetchColumns(state, rawData) {
       const { data } = state.columns
-      const { list, count, currentPage } = rawdata.data
+      const { list, count, currentPage } = rawData.data
       // console.log(list instanceof Array)
       const arrToobj = (list) => {
         return list.reduce((previousValue, currentValue) => {
@@ -82,15 +106,15 @@ export default createStore({
         currentPage: currentPage * 1,
       }
     },
-    fetchOtherComponentsHeight(state, rawdata) {
-      state.otherHeight = rawdata
+    fetchOtherComponentsHeight(state, rawData) {
+      state.otherHeight = rawData
     },
-    fetchColumnDetail(state, rawdata) {
-      state.columns.data[rawdata.data._id] = rawdata.data
+    fetchColumnDetail(state, rawData) {
+      state.columns.data[rawData.data._id] = rawData.data
     },
-    fetchPosts(state, rawdata) {
+    fetchPosts(state, rawData) {
       const { data } = state.post
-      const { list, pageSize, count, currentPage } = rawdata.data
+      const { list, pageSize, count, currentPage } = rawData.data
       state.post = {
         data: { ...data, ...list },
         total: count,
@@ -98,16 +122,31 @@ export default createStore({
         currentPage,
       }
     },
-    fetchPost(state, rawdata) {
-      state.post.data[rawdata.data._id] = rawdata.data
+    fetchPost(state, rawData) {
+      state.post.data[rawData.data._id] = rawData.data
     },
+    userLogin(state, rawData) {
+      state.token = rawData.data.token
+      http.defaults.headers.common.Authorization = `Bearer ${rawData.data.token}`
+      localStorage.setItem("token", rawData.data.token)
+      console.log("登录成功!");
+    },
+    fetchCurrentUserInformation(state, rawData) {
+      state.userInformation = {
+        isLogin: true,
+        data: rawData.data
+      }
+
+    },
+    register(state, rawData) {
+    }
   },
   getters: {
     getColumnDetailById: (state) => (id) => {
-      return state.columns.data[id] || {}
+      return state.columns.data[id]
     },
     getPostById: (state) => (id) => {
-      return state.post.data[id] || {}
+      return state.post.data[id]
     },
   },
 })

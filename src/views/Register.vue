@@ -4,25 +4,33 @@
       <h4>注册账户</h4>
       <div class="col-md-12">
         <label for="inputEmail" class="form-label">邮箱地址</label>
-        <input type="email" class="form-control" id="inputEmail" required />
+        <input
+          type="email"
+          class="form-control"
+          id="inputEmail"
+          required
+          v-model="registerInfo.email"
+        />
         <div class="invalid-feedback">电子邮箱地址不能为空</div>
       </div>
       <div class="col-md-12">
-        <label for="inputPassword4" class="form-label">昵称</label>
+        <label for="inputPassword" class="form-label">昵称</label>
         <input
           type="password"
           class="form-control"
-          id="inputPassword4"
+          id="inputPassword"
+          v-model="registerInfo.nickName"
           required
         />
         <div class="invalid-feedback">昵称不能为空</div>
       </div>
       <div class="col-12">
-        <label for="inputPassword" class="form-label">密码</label>
+        <label for="inputPassword2" class="form-label">密码</label>
         <input
           type="password"
           class="form-control"
-          id="inputPassword"
+          id="inputPassword2"
+          v-model="registerInfo.password"
           required
         />
         <div class="invalid-feedback">密码不能为空</div>
@@ -33,6 +41,7 @@
           type="password"
           class="form-control"
           id="confirmPassword"
+          v-model="registerInfo.verifyPsd"
           required
         />
         <div class="invalid-feedback">重复密码不能为空</div>
@@ -48,15 +57,22 @@
       <router-link to="/login">已经有账户了？去登录</router-link>
 
       <div class="d-grid gap-2 col-12 mx-auto">
-        <button type="submit" class="btn btn-primary">注册新用户</button>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          @click.prevent="toRegister"
+        >
+          注册新用户
+        </button>
       </div>
     </form>
   </div>
 </template>
 
 <script>
-import { onMounted, ref } from "vue"
+import { onMounted, ref, reactive, toRaw } from "vue"
 import { useStore } from "vuex"
+import { useRouter } from "vue-router"
 // import {} from "bootstrap/js/dist/"
 
 export default {
@@ -64,6 +80,28 @@ export default {
   setup() {
     const registerRef = ref(null)
     const store = useStore()
+    const router = useRouter()
+    const registerInfo = reactive({
+      email: "",
+      nickName: "",
+      password: "",
+      verifyPsd: "",
+    })
+    const toRegister = () => {
+      const { email, nickName, password } = registerInfo
+      // console.log({ email, nickName, password })
+      store
+        .dispatch("register", { email, nickName, password })
+        .then((res) => {
+          alert("注册成功!!!已自动登录~2秒后跳转到首页")
+          setTimeout(() => {
+            router.push("/home")
+          }, 2000)
+        })
+        .catch((err) => {
+          console.log("唔知点该,注册失败哦")
+        })
+    }
     onMounted(() => {
       registerRef.value.style.height =
         document.documentElement.clientHeight -
@@ -78,30 +116,10 @@ export default {
         80 +
         "px"
     })
-    onMounted(() => {
-      ;(function () {
-        "use strict"
-
-        var forms = document.querySelectorAll(".needs-validation")
-
-        Array.prototype.slice.call(forms).forEach(function (form) {
-          form.addEventListener(
-            "submit",
-            function (event) {
-              if (!form.checkValidity()) {
-                event.preventDefault()
-                event.stopPropagation()
-              }
-
-              form.classList.add("was-validated")
-            },
-            false
-          )
-        })
-      })()
-    })
     return {
       registerRef,
+      registerInfo,
+      toRegister,
     }
   },
 }

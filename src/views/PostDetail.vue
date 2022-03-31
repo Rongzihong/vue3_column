@@ -6,7 +6,7 @@
           <router-link to="/home">首页</router-link>
         </li>
         <li class="breadcrumb-item active">
-          <router-link :to="`/detail/${briefIntro}`">专栏首页</router-link>
+          <router-link :to="`/detail/${post.column}`">专栏首页</router-link>
         </li>
         <li class="breadcrumb-item">{{ post.title }}</li>
       </ol>
@@ -26,6 +26,11 @@
     </div>
     <p class="space"></p>
     <div v-html="post.content"></div>
+
+    <div class="button-group">
+      <button class="btn btn-outline-info" type="button">编辑</button>
+      <button class="btn btn-outline-danger" type="button">删除</button>
+    </div>
   </div>
 </template>
 
@@ -38,14 +43,12 @@ export default {
   setup() {
     const route = useRoute()
     const store = useStore()
-    const briefIntro = () => {
-      return route.params.id
-    }
+
     const post = computed(() => store.getters.getPostById(route.params.id))
     onMounted(() => {
       store.dispatch("fetchPost", route.params.id)
     })
-    return { post, briefIntro }
+    return { post }
   },
 }
 </script>
@@ -53,7 +56,7 @@ export default {
 <style scoped>
 .post-detail {
   margin: 1rem auto;
-  width: 35%;
+  width: 40%;
 }
 
 nav {
@@ -61,10 +64,7 @@ nav {
   background-color: #e9ecef;
   border-radius: 0.25rem;
   padding: 0.8rem 0.8rem 0.002rem 0.8rem;
-  --bs-breadcrumb-divider: url(
-    &#34;data:image/svg + xml,
-    %3Csvgxmlns="http://www.w3.org/2000/svg"width="8"height="8"%3E%3Cpathd="M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z"fill="currentColor"/%3E%3C/svg%3E&#34;
-  );
+
   margin-bottom: 2.5rem;
 }
 img {
@@ -121,5 +121,13 @@ p {
 span,
 i {
   color: #6c757d;
+}
+
+.button-group {
+  margin-top: 3rem;
+}
+
+button:first-of-type {
+  margin-right: 0.5rem;
 }
 </style>

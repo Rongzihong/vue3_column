@@ -15,14 +15,19 @@
       </div>
       <span>{{ item.createdAt }}</span>
     </div>
-    <div class="d-grid gap-2 d-xl-flex justify-content-md-center">
-      <button class="btn btn-outline-primary" type="button">加载更多</button>
+    <div
+      class="d-grid gap-2 d-xl-flex justify-content-md-center"
+      v-if="Object.keys(post).length != total"
+    >
+      <button class="btn btn-outline-primary" type="button" @click="showMore">
+        加载更多
+      </button>
     </div>
   </div>
 </template>
 
 <script>
-import { onMounted, computed } from "vue"
+import { onMounted, computed, toRaw } from "vue"
 import { useStore } from "vuex"
 import { useRoute, useRouter } from "vue-router"
 export default {
@@ -38,24 +43,36 @@ export default {
     const post = computed(() => {
       return store.state.post.data
     })
+    const total = computed(() => {
+      return store.state.post.total
+    })
     const params = {
       columnId: route.params.id,
-      pageSize: 5,
+      pageSize: 3,
       currentPage: 1,
     }
 
     const toPost = (id) => {
-      console.log(id)
       router.push(`/postdetail/${id}`)
     }
 
+    const showMore = () => {
+      store.dispatch("fetchPosts", {
+        columnId: route.params.id,
+        pageSize:
+          Object.keys(toRaw(post.value)).length + 3 < total.value
+            ? Object.keys(toRaw(post.value)).length + 3
+            : total.value,
+        currentPage: params.currentPage,
+      })
+    }
+
     onMounted(() => {
-      // console.log(typeof router.params.id)
       store.dispatch("fetchColumnDetail", route.params.id)
       store.dispatch("fetchPosts", params)
     })
 
-    return { column, post, toPost }
+    return { column, post, toPost, showMore, total }
   },
 }
 </script>

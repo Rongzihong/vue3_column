@@ -2,6 +2,7 @@
   <nav class="navbar">
     <div class="wapper">
       <router-link to="/" class="logo">之乎者也</router-link>
+      <!-- {{ column }} -->
       <div v-if="!logined">
         <router-link to="/login" class="btn btn-outline-light btn-sm"
           >登录</router-link
@@ -12,6 +13,7 @@
           >注册</router-link
         >
       </div>
+
       <div v-else class="dropdown">
         <button
           class="btn btn-outline-light dropdown-toggle"
@@ -23,9 +25,15 @@
         <ul class="dropdown-menu">
           <li><a class="dropdown-item" href="/create">新建文章</a></li>
           <li>
-            <a class="dropdown-item" :href="`/detail/${column}`">我的专栏</a>
+            <a class="dropdown-item" :href="`/detail/${userInfo.column}`"
+              >我的专栏</a
+            >
           </li>
-          <li><a class="dropdown-item" href="/edit">编辑资料</a></li>
+          <li>
+            <a class="dropdown-item" :href="`/edit/${userInfo._id}`"
+              >编辑资料</a
+            >
+          </li>
           <li><a class="dropdown-item" @click="logout">退出登录</a></li>
         </ul>
       </div>
@@ -47,19 +55,15 @@ export default {
     const userInfo = computed(() => {
       return store.state.userInformation.data
     })
-    const column = computed(() => {
-      return store.state.userInformation.column
-    })
 
     const logout = () => {
-      store.commit("logout")
+      store.commit("userLogout")
     }
 
     return {
       logined,
       userInfo,
       logout,
-      column,
     }
   },
 }

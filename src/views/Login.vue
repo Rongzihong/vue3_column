@@ -35,11 +35,12 @@
 <script>
 import { onMounted, ref } from "vue"
 import { useStore } from "vuex"
-import { useRouter } from "vue-router"
+import { useRouter, useRoute } from "vue-router"
 export default {
   name: "Login",
   setup() {
     const store = useStore()
+    const route = useRoute()
     const router = useRouter()
     const loginRef = ref(null)
     const password = ref("")
@@ -51,7 +52,10 @@ export default {
           password: password.value,
         })
         .then(() => {
-          router.push("/home")
+          // 重定向跳转,就是在没有登录状态的情况下进入需要登录页面那么在成功登录后会自动跳转到前页面
+          
+          let toPath = route.query.redirect || "/home"
+          router.push(toPath)
         })
         .catch((err) => {
           console.log(err)

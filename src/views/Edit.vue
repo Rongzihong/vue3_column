@@ -30,18 +30,22 @@
       ></textarea>
       <label for="floatingTextarea">请输入简介信息</label>
     </div>
-    <button class="btn btn-primary">提交修改</button>
+    <button class="btn btn-primary" @click="submit">提交修改</button>
   </div>
 </template>
 
 <script>
-import { onMounted } from "vue"
+import { useStore } from "vuex"
+import { useRoute } from "vue-router"
 export default {
   name: "Edit",
   setup() {
-    onMounted(() => {
-      console.log("gsdfga")
-    })
+    const store = useStore()
+    const route = useRoute()
+    const submit = () => {
+      store.dispatch("modifyUser", route.params.id)
+    }
+    return { submit }
   },
 }
 </script>

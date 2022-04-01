@@ -9,6 +9,7 @@ import {
   userLogin,
   fetchCurrentUserInformation,
   register,
+  modifyUser
 } from "../api/index"
 // 测试数据
 // import http from "../api/http"
@@ -140,7 +141,7 @@ export default createStore({
         data: rawData.data,
       }
     },
-    register(state, rawData) {},
+    register(state, rawData) { },
     userLogout(state) {
       state.token = ""
       state.userInformation = { isLogin: false }

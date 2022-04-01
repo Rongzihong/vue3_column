@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router"
 import http from "../api/http"
 import store from "../store"
+//    在路径前加分号说明是否要参数?
 const routes = [
   {
     path: "/",
@@ -11,7 +12,7 @@ const routes = [
     component: () => import("../views/PostDetail.vue"),
   },
   {
-    path: "/edit",
+    path: "/edit/:id",
     component: () => import("../views/Edit.vue"),
   },
   {
@@ -46,36 +47,48 @@ export const router = createRouter({
 router.beforeEach((to, from, next) => {
   const { userInformation, token } = store.state
   // const token = localStorage.getItem("token")
-  const { requiredLogin, redirectAlreadyLogin } = to.meta
+  // const { requiredLogin, redirectAlreadyLogin } = to.meta
   // 没有登录
-  if (!userInformation.isLogin) {
-    // 有token，就是登录信息
-    if (token) {
-      http.defaults.headers.common.Authorization = `Bearer ${token}`
-      store
-        .dispatch("loginAndfetch")
-        .then(() => {
-          if (redirectAlreadyLogin) {
-            next("/")
-          } else {
-            next()
-          }
-        })
-        .catch((err) => {
-          console.log(err)
-          store.commit("userLogout")
-          next("login")
-        })
-    } else {
-      if (requiredLogin) {
-        next("login")
-      } else {
-        next()
-      }
-    }
+  // if (!userInformation.isLogin) {
+  //   // 有token，就是登录信息
+  //   if (token) {
+  //     http.defaults.headers.common.Authorization = `Bearer ${token}`
+  //     store
+  //       .dispatch("loginAndfetch")
+  //       .then(() => {
+  //         if (redirectAlreadyLogin) {
+  //           next("/")
+  //         } else {
+  //           next()
+  //         }
+  //       })
+  //       .catch((err) => {
+  //         console.log(err)
+  //         store.commit("userLogout")
+  //         next("login")
+  //       })
+  //   } else {
+  //     if (requiredLogin) {
+  //       next("login")
+  //     } else {
+  //       next()
+  //     }
+  //   }
+  // } else {
+  //   if (redirectAlreadyLogin) {
+  //     next("/")
+  //   } else {
+  //     next()
+  //   }
+  // }
+
+  if (userInformation.isLogin) {
+    console.log(userInformation.isLogin);
+    next()
   } else {
-    if (redirectAlreadyLogin) {
-      next("/")
+    let toPath = to.path
+    if (toPath.indexOf("/create") != -1) {
+      next("login?redirect=" + toPath)
     } else {
       next()
     }

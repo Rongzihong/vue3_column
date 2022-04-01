@@ -49,3 +49,9 @@ export const register = (data) =>
     data,
     method: "post"
   })
+
+export const modifyUser = (id) =>
+  http({
+    url: `user/{id}`,
+    method: "patch"
+  })

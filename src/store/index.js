@@ -71,7 +71,6 @@ export default createStore({
     },
     async fetchCurrentUserInformation({ state, commit }) {
       let result = await fetchCurrentUserInformation()
-      console.log(result)
       commit("fetchCurrentUserInformation", result)
     },
     async loginAndfetch({ dispatch }, loginData) {

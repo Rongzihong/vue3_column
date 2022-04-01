@@ -45,52 +45,38 @@ export const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
+  console.log(to);
   const { userInformation, token } = store.state
-  // const token = localStorage.getItem("token")
-  // const { requiredLogin, redirectAlreadyLogin } = to.meta
-  // 没有登录
-  // if (!userInformation.isLogin) {
-  //   // 有token，就是登录信息
-  //   if (token) {
-  //     http.defaults.headers.common.Authorization = `Bearer ${token}`
-  //     store
-  //       .dispatch("loginAndfetch")
-  //       .then(() => {
-  //         if (redirectAlreadyLogin) {
-  //           next("/")
-  //         } else {
-  //           next()
-  //         }
-  //       })
-  //       .catch((err) => {
-  //         console.log(err)
-  //         store.commit("userLogout")
-  //         next("login")
-  //       })
-  //   } else {
-  //     if (requiredLogin) {
-  //       next("login")
-  //     } else {
-  //       next()
-  //     }
-  //   }
-  // } else {
-  //   if (redirectAlreadyLogin) {
-  //     next("/")
-  //   } else {
-  //     next()
-  //   }
-  // }
-
-  if (userInformation.isLogin) {
-    console.log(userInformation.isLogin);
-    next()
+  const { requiredLogin, redirectAlreadyLogin } = to.meta
+  if (!userInformation.isLogin) {
+    if (token) {
+      http.defaults.headers.common.Authorization = `Bearer ${token}`
+      store.dispatch("fetchCurrentUserInformation").then(() => {
+        if (redirectAlreadyLogin) {
+          next("/")
+        } else {
+          next()
+        }
+      }).catch((err) => {
+        console.log(err);
+        store.commit("userLogout")
+        next("login")
+      })
+    } else {
+      if (requiredLogin) {
+        next("login?redirect=" + to.path)
+        // next("login?redirect=")
+        // 一定不要忘了等号啊,query参数是什么=什么的!一定要有等号啊!
+      } else {
+        next()
+      }
+    }
   } else {
-    let toPath = to.path
-    if (toPath.indexOf("/create") != -1) {
-      next("login?redirect=" + toPath)
+    if (redirectAlreadyLogin) {
+      next("/")
     } else {
       next()
     }
   }
+
 })

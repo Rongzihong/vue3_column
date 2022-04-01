@@ -8,7 +8,7 @@ const routes = [
   },
   {
     path: "/postdetail/:id",
-    component: () => import("../views/PostDetail.vue")
+    component: () => import("../views/PostDetail.vue"),
   },
   {
     path: "/edit",
@@ -21,18 +21,17 @@ const routes = [
   {
     path: "/create",
     component: () => import("../views/Create.vue"),
-    meta: { requiredLogin: true }
+    meta: { requiredLogin: true },
   },
   {
     path: "/login",
     component: () => import("../views/Login.vue"),
-    meta: { redirectAlreadyLogin: true }
+    meta: { redirectAlreadyLogin: true },
   },
   {
     path: "/register",
     component: () => import("../views/Register.vue"),
-    meta: { redirectAlreadyLogin: true }
-
+    meta: { redirectAlreadyLogin: true },
   },
   {
     path: "/home",
@@ -45,24 +44,28 @@ export const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const { userInformation } = store.state
-  const token = localStorage.getItem("token")
+  const { userInformation, token } = store.state
+  // const token = localStorage.getItem("token")
   const { requiredLogin, redirectAlreadyLogin } = to.meta
   // 没有登录
   if (!userInformation.isLogin) {
+    // 有token，就是登录信息
     if (token) {
       http.defaults.headers.common.Authorization = `Bearer ${token}`
-      store.dispatch("loginAndfetch").then(() => {
-        if (redirectAlreadyLogin) {
-          next("/")
-        } else {
-          next()
-        }
-      }).catch(err => {
-        console.log(err);
-        store.commit("userLogout")
-        next("login")
-      })
+      store
+        .dispatch("loginAndfetch")
+        .then(() => {
+          if (redirectAlreadyLogin) {
+            next("/")
+          } else {
+            next()
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+          store.commit("userLogout")
+          next("login")
+        })
     } else {
       if (requiredLogin) {
         next("login")

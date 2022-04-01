@@ -8,7 +8,7 @@ import {
   deletePost,
   userLogin,
   fetchCurrentUserInformation,
-  register
+  register,
 } from "../api/index"
 // 测试数据
 // import http from "../api/http"
@@ -29,7 +29,7 @@ export default createStore({
     otherHeight: 0,
     post: { data: {}, total: 0, currentPage: 0, pageSize: 0 },
     userInformation: { data: {}, isLogin: false },
-    token: localStorage.getItem("token") || ""
+    token: localStorage.getItem("token") || "",
   },
   actions: {
     async fetchColumns({ state, commit }, params = {}) {
@@ -70,20 +70,19 @@ export default createStore({
     },
     async fetchCurrentUserInformation({ state, commit }) {
       let result = await fetchCurrentUserInformation()
-      console.log(result);
+      console.log(result)
       commit("fetchCurrentUserInformation", result)
     },
     async loginAndfetch({ dispatch }, loginData) {
       return dispatch("userLogin", loginData).then(() => {
         return dispatch("fetchCurrentUserInformation")
       })
-
     },
     async register({ commit }, params) {
       let result = await register(params)
       commit("register", result)
-      console.log(result);
-    }
+      console.log(result)
+    },
   },
   mutations: {
     fetchColumns(state, rawData) {
@@ -133,30 +132,29 @@ export default createStore({
       state.token = rawData.data.token
       http.defaults.headers.common.Authorization = `Bearer ${rawData.data.token}`
       localStorage.setItem("token", rawData.data.token)
-      console.log("登录成功!");
+      console.log("登录成功!")
     },
     fetchCurrentUserInformation(state, rawData) {
       state.userInformation = {
         isLogin: true,
-        data: rawData.data
+        data: rawData.data,
       }
-
     },
-    register(state, rawData) {
-    },
+    register(state, rawData) {},
     userLogout(state) {
       state.token = ""
       state.userInformation = { isLogin: false }
       localStorage.removeItem("token")
       delete http.defaults.headers.common.Authorization
-    }
+    },
   },
   getters: {
+    // getters这里要备用一个{}因为可能出现数据还没返回就读取的情况
     getColumnDetailById: (state) => (id) => {
-      return state.columns.data[id]
+      return state.columns.data[id] || {}
     },
     getPostById: (state) => (id) => {
-      return state.post.data[id]
+      return state.post.data[id] || {}
     },
   },
 })

@@ -56,7 +56,13 @@ export default {
 <style scoped>
 .post-detail {
   margin: 1rem auto;
-  width: 40%;
+  width: 35%;
+}
+
+@media screen and (max-width: 1460px) {
+  .post-detail {
+    width: 40%;
+  }
 }
 
 nav {

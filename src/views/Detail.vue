@@ -38,6 +38,7 @@ export default {
     const router = useRouter()
 
     const column = computed(() => {
+      console.log(store.getters.getColumnDetailById(route.params.id))
       return store.getters.getColumnDetailById(route.params.id)
     })
     const post = computed(() => {
@@ -68,7 +69,6 @@ export default {
     }
 
     onMounted(() => {
-      console.log(toRaw(column.value))
       store.dispatch("fetchColumnDetail", route.params.id)
       store.dispatch("fetchPosts", params)
     })

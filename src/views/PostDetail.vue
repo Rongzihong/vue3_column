@@ -75,7 +75,7 @@ nav {
 }
 img {
   width: 100%;
-  height: 25rem;
+  /* height: 25rem; */
   border-radius: 0.3rem;
   margin-bottom: 2rem;
 }

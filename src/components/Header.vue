@@ -98,10 +98,8 @@ export default {
 .ml-1 {
   margin-left: 1rem;
 }
-/* div :nth-child(2) {
-  margin-right: 12rem;
-} */
-/* .register {
-  margin-right: 12rem;
-} */
+
+li > a:last-of-type {
+  cursor: pointer;
+}
 </style>

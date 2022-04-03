@@ -1,7 +1,7 @@
 <template>
   <div class="column">
     <div class="intro">
-      <img :src="column.avatar?.url" alt="" />
+      <img :src="column?.avatar?.url" alt="" />
       <h4>{{ column.title }}</h4>
       <p>{{ column.description }}</p>
     </div>
@@ -10,7 +10,7 @@
     <div class="content-card" v-for="item in post" :key="item.key">
       <a @click="toPost(item._id)">{{ item.title }}</a>
       <div class="content-card-body">
-        <img :src="item.image.url" alt="" />
+        <img :src="item.image?.url" alt="" />
         <p>{{ item.excerpt }}</p>
       </div>
       <span>{{ item.createdAt }}</span>

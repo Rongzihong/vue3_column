@@ -45,23 +45,25 @@ export const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  console.log(to);
   const { userInformation, token } = store.state
   const { requiredLogin, redirectAlreadyLogin } = to.meta
   if (!userInformation.isLogin) {
     if (token) {
       http.defaults.headers.common.Authorization = `Bearer ${token}`
-      store.dispatch("fetchCurrentUserInformation").then(() => {
-        if (redirectAlreadyLogin) {
-          next("/")
-        } else {
-          next()
-        }
-      }).catch((err) => {
-        console.log(err);
-        store.commit("userLogout")
-        next("login")
-      })
+      store
+        .dispatch("fetchCurrentUserInformation")
+        .then(() => {
+          if (redirectAlreadyLogin) {
+            next("/")
+          } else {
+            next()
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+          store.commit("userLogout")
+          next("login")
+        })
     } else {
       if (requiredLogin) {
         next("login?redirect=" + to.path)
@@ -78,5 +80,4 @@ router.beforeEach((to, from, next) => {
       next()
     }
   }
-
 })

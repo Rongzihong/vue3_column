@@ -24,34 +24,41 @@ export const fetchPost = (id) =>
     method: "get",
   })
 
-export const deletePost = (id) => http({
-  url: `/posts/${id}`,
-  method: "delete",
-})
+export const deletePost = (id) =>
+  http({
+    url: `/posts/${id}`,
+    method: "delete",
+  })
+
+export const createPost = (data) =>
+  http({
+    data,
+    url: "/posts",
+    method: "post",
+  })
 
 export const userLogin = (data) =>
   http({
     url: "/user/login",
     data,
-    method: "post"
+    method: "post",
   })
-
 
 export const fetchCurrentUserInformation = () =>
   http({
     url: "/user/current",
-    method: "get"
+    method: "get",
   })
 
 export const register = (data) =>
   http({
     url: "/users",
     data,
-    method: "post"
+    method: "post",
   })
 
 export const modifyUser = (id) =>
   http({
     url: `user/{id}`,
-    method: "patch"
+    method: "patch",
   })

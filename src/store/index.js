@@ -5,11 +5,12 @@ import {
   fetchColumnDetail,
   fetchPosts,
   fetchPost,
+  createPost,
   deletePost,
   userLogin,
   fetchCurrentUserInformation,
   register,
-  modifyUser
+  modifyUser,
 } from "../api/index"
 // 测试数据
 // import http from "../api/http"
@@ -61,6 +62,10 @@ export default createStore({
       } else {
         return Promise.resolve({ data: currentPost })
       }
+    },
+    async createPost({ state, commit }, data) {
+      let result = await createPost(data)
+      commit("createPost", result)
     },
     // async deletePost({ state, commit }, id) {
     //   commit("deletePost", await deletePost(id))
@@ -128,6 +133,9 @@ export default createStore({
     fetchPost(state, rawData) {
       state.post.data[rawData.data._id] = rawData.data
     },
+    createPost(state, newPost) {
+      state.post.data[newPost._id] = newPost
+    },
     userLogin(state, rawData) {
       state.token = rawData.data.token
       http.defaults.headers.common.Authorization = `Bearer ${rawData.data.token}`
@@ -140,7 +148,7 @@ export default createStore({
         data: rawData.data,
       }
     },
-    register(state, rawData) { },
+    register(state, rawData) {},
     userLogout(state) {
       state.token = ""
       state.userInformation = { isLogin: false }

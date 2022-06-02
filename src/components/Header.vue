@@ -87,12 +87,11 @@ export default {
 
 .logo {
   cursor: pointer;
-  font-weight: 350;
-  /* margin-left: 8rem; */
+  font-weight: 300;
   font-size: 1.5rem;
   letter-spacing: 0.005px;
   text-decoration: none;
-  color: #1a1a1a;
+  color: #ffff;
 }
 
 .ml-1 {

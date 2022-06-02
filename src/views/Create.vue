@@ -125,7 +125,7 @@ export default {
 
 <style scoped>
 .create {
-  height: 45.5rem;
+  min-height: 45.5rem;
   width: 50%;
   margin: 3rem auto;
 }

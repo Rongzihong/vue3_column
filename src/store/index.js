@@ -10,7 +10,6 @@ import {
   userLogin,
   fetchCurrentUserInformation,
   register,
-  modifyUser,
 } from "../api/index"
 // 测试数据
 // import http from "../api/http"
@@ -29,6 +28,7 @@ export default createStore({
   state: {
     columns: { currentPage: 0, total: 0, data: {} },
     otherHeight: 0,
+    loading: false,
     post: { data: {}, total: 0, currentPage: 0, pageSize: 0 },
     userInformation: { data: {}, isLogin: false },
     token: localStorage.getItem("token") || "",
@@ -67,9 +67,10 @@ export default createStore({
       let result = await createPost(data)
       commit("createPost", result)
     },
-    // async deletePost({ state, commit }, id) {
-    //   commit("deletePost", await deletePost(id))
-    // },
+    async deletePost({ state, commit }, id) {
+      let result = await deletePost(id)
+      commit("deletePost", result)
+    },
     async userLogin({ state, commit }, params) {
       let result = await userLogin(params)
       commit("userLogin", result)
@@ -136,6 +137,9 @@ export default createStore({
     createPost(state, newPost) {
       state.post.data[newPost._id] = newPost
     },
+    deletePost(state, rawData) {
+      delete state.post.data[rawData._id]
+    },
     userLogin(state, rawData) {
       state.token = rawData.data.token
       http.defaults.headers.common.Authorization = `Bearer ${rawData.data.token}`
@@ -154,6 +158,9 @@ export default createStore({
       state.userInformation = { isLogin: false }
       localStorage.removeItem("token")
       delete http.defaults.headers.common.Authorization
+    },
+    setLoading(state, status) {
+      state.loading = status
     },
   },
   getters: {

@@ -8,17 +8,23 @@
           type="email"
           class="form-control"
           id="inputEmail"
-          v-model="email"
+          v-model="emailRef.val"
+          @blur="validateEmail"
         />
       </div>
+      <div class="form-text" v-if="emailRef.error">{{ emailRef.message }}</div>
       <div class="col-12">
         <label for="inputPassword" class="form-label">密码</label>
         <input
           type="password"
           class="form-control"
           id="inputPassword"
-          v-model="password"
+          v-model="passwordRef.val"
+          @blur="validatePassword"
         />
+      </div>
+      <div class="form-text" v-if="passwordRef.error">
+        {{ passwordRef.message }}
       </div>
 
       <router-link to="/register">还没有账户？去注册一个新的吧！</router-link>
@@ -33,9 +39,11 @@
 </template>
 
 <script>
-import { onMounted, ref } from "vue"
+import { onMounted, reactive, ref } from "vue"
 import { useStore } from "vuex"
 import { useRouter, useRoute } from "vue-router"
+const emailReg =
+  /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
 export default {
   name: "Login",
   setup() {
@@ -45,15 +53,46 @@ export default {
     const loginRef = ref(null)
     const password = ref("")
     const email = ref("")
+    const emailRef = reactive({
+      val: "",
+      error: false,
+      message: "",
+    })
+    const validateEmail = () => {
+      if (emailRef.val.trim() === "") {
+        emailRef.error = true
+        emailRef.message = "邮箱不能为空！"
+      } else if (!emailReg.test(emailRef.val)) {
+        emailRef.error = true
+        emailRef.message = "无效邮箱！"
+      } else {
+        emailRef.error = false
+      }
+    }
+
+    const passwordRef = reactive({
+      val: "",
+      error: false,
+      message: "",
+    })
+
+    const validatePassword = () => {
+      if (passwordRef.val.trim() === "") {
+        passwordRef.error = true
+        passwordRef.message = "密码不能为空!"
+      } else {
+        passwordRef.error = false
+      }
+    }
     const login = () => {
       store
         .dispatch("loginAndfetch", {
-          email: email.value,
-          password: password.value,
+          email: emailRef.val,
+          password: passwordRef.val,
         })
         .then(() => {
+          alert("登录成功~")
           // 重定向跳转,就是在没有登录状态的情况下进入需要登录页面那么在成功登录后会自动跳转到前页面
-          
           let toPath = route.query.redirect || "/home"
           router.push(toPath)
         })
@@ -61,6 +100,7 @@ export default {
           console.log(err)
         })
     }
+
     onMounted(() => {
       loginRef.value.style.height =
         document.documentElement.clientHeight -
@@ -80,6 +120,10 @@ export default {
       email,
       password,
       login,
+      emailRef,
+      validateEmail,
+      validatePassword,
+      passwordRef,
     }
   },
 }
@@ -89,7 +133,7 @@ export default {
 .login {
   margin: 3rem auto;
   /* border: 1px solid saddlebrown; */
-  min-height: 20rem;
+  min-height: 24rem;
   width: 20rem;
   /* background-color: honeydew; */
 }
@@ -99,5 +143,9 @@ h4 {
 }
 button {
   margin-top: 0.5rem;
+}
+
+.form-text {
+  color: red !important;
 }
 </style>

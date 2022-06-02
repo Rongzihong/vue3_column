@@ -24,17 +24,17 @@ export const fetchPost = (id) =>
     method: "get",
   })
 
-export const deletePost = (id) =>
-  http({
-    url: `/posts/${id}`,
-    method: "delete",
-  })
-
 export const createPost = (data) =>
   http({
     data,
     url: "/posts",
     method: "post",
+  })
+
+export const deletePost = (id) =>
+  http({
+    url: `/posts/${id}`,
+    method: "delete",
   })
 
 export const userLogin = (data) =>
@@ -55,10 +55,4 @@ export const register = (data) =>
     url: "/users",
     data,
     method: "post",
-  })
-
-export const modifyUser = (id) =>
-  http({
-    url: `user/{id}`,
-    method: "patch",
   })

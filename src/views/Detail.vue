@@ -36,9 +36,10 @@ export default {
     const store = useStore()
     const route = useRoute()
     const router = useRouter()
-
+    onMounted(() => {
+      console.log(column.value, route.params.id)
+    })
     const column = computed(() => {
-      console.log(store.getters.getColumnDetailById(route.params.id))
       return store.getters.getColumnDetailById(route.params.id)
     })
     const post = computed(() => {
